@@ -1,7 +1,9 @@
 package org.serratec.TrabalhoFinalApi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,6 +15,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Usuario {
@@ -35,10 +41,12 @@ public class Usuario {
 	private String senha;
 
 	@Column(name = "data_nascimento")
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dataNascimento;
 
-	@OneToMany(mappedBy = "id.usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<UsuarioPostagem> usuarioPostagem = new HashSet<>();
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Postagem> usuarioPostagem = new ArrayList<>();
 
 	public Usuario() {
 	}
@@ -101,11 +109,7 @@ public class Usuario {
 		this.dataNascimento = dataNascimento;
 	}
 
-	@Override
-	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", usuarioPerfis="
-				+ usuarioPostagem + "]";
-	}
+	
 
 	@Override
 	public int hashCode() {
