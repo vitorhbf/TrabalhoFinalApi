@@ -9,6 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Comentario {
@@ -18,7 +23,10 @@ public class Comentario {
 	@Column(name = "id_comentario")
 	private Long id;
 
-	@Column(name = "data_inicio_seguimento")
+	@NotNull(message = "Preencha a data do seguimento ")
+	@Column(name = "data_inicio_seguimento", nullable = false)
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dataInicioSeguimento;
 
 	@ManyToOne

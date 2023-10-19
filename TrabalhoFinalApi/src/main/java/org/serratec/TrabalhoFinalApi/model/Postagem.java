@@ -15,6 +15,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Postagem {
@@ -24,13 +31,20 @@ public class Postagem {
 	@Column(name = "id_postagem")
 	private Long id;
 
-	@Column(name = "conteudo_postagem", length = 255)
+	@NotBlank(message = "Preencha o conteúdo da postagem")
+	@Size(max = 255)
+	@Column(name = "conteudo_postagem",nullable = false, length = 255)
 	private String conteudoPostagem;
 
-	@Column(name = "data_postagem")
+	@NotNull(message = "Preencha a data da postagem ")
+	@Column(name = "data_postagem",nullable = false)
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dataPostagem;
 
-	@Column(name = "autor", length = 255)
+	@NotBlank(message = "Preencha o autor da postagem")
+	@Size(max = 255)
+	@Column(name = "autor",nullable = false, length = 255)
 	private String autor;
 
 	@ManyToOne

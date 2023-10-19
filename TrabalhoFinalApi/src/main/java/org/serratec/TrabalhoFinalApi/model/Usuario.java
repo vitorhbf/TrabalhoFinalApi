@@ -2,10 +2,8 @@ package org.serratec.TrabalhoFinalApi.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -28,19 +29,28 @@ public class Usuario {
 	@Column(name = "id_usuario")
 	private Long id;
 
-	@Column(name = "nome", length = 60)
+	@NotBlank(message = "Preencha o nome do Usuario")
+	@Size(max = 60)
+	@Column(name = "nome",nullable = false, length = 60)
 	private String nome;
-
-	@Column(name = "sobrenome", length = 60)
+	
+	@NotBlank(message = "Preencha o sobrenome do Usuario")
+	@Size(max = 60)
+	@Column(name = "sobrenome",nullable = false, length = 60)
 	private String sobrenome;
-
-	@Column(name = "email", length = 60)
+	
+	@NotBlank(message = "Preencha o email do Usuario")
+	@Size(max = 60)
+	@Column(name = "email",nullable = false, length = 60)
 	private String email;
 
-	@Column(name = "senha", length = 255)
+	@NotBlank(message = "Preencha a senha do Usuario")
+	@Size(max = 60)
+	@Column(name = "senha",nullable = false, length = 255)
 	private String senha;
 
-	@Column(name = "data_nascimento")
+	@NotNull(message = "Preencha a data de nascimento do Usuario")
+	@Column(name = "data_nascimento",nullable = false)
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dataNascimento;

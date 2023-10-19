@@ -5,24 +5,29 @@ import java.util.Optional;
 
 import org.serratec.TrabalhoFinalApi.model.Usuario;
 import org.serratec.TrabalhoFinalApi.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
-    @Autowired
+    
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();
+        
     }
 
-    public Optional<Usuario> getUsuarioById(Long id) {
-        return usuarioRepository.findById(id);
+    public Optional<Usuario> getUsuarioById(Long id) { 
+        if (usuarioRepository.existsById(id)) {
+            return usuarioRepository.findById(id);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuario com ID " + id + " não encontrada");
     }
 
     public Usuario createUsuario(Usuario usuario) {
@@ -34,7 +39,7 @@ public class UsuarioService {
             usuario.setId(id);
             return usuarioRepository.save(usuario);
         }
-        return null; // Trate o cenário em que o usuário com o ID especificado não existe.
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuario com ID " + id + " não encontrada");
     }
 
     public void deleteUsuario(Long id) {
