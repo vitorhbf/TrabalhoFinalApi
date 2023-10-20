@@ -8,7 +8,6 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -55,11 +54,14 @@ public class Usuario {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dataNascimento;
 
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private List<Postagem> usuarioPostagem = new ArrayList<>();
-
+	
+	/* @OneToMany(mappedBy = "usuarioSeguidor")
+    private List<UsuarioRelacionamento> UsuarioSeguidores = new ArrayList<>();
+	*/
 	public Usuario() {
-	}
+	} 
 
 	public Usuario(Long id, String nome, String sobrenome, String email, String senha, Date dataNascimento) {
 		super();

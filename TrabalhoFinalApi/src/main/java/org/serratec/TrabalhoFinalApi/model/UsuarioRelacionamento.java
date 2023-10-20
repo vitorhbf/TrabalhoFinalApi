@@ -14,16 +14,16 @@ public class UsuarioRelacionamento {
     @EmbeddedId
     private UsuarioRelacionamentoPK id = new UsuarioRelacionamentoPK();
 
-    @Column(name = "data_criacao")
+    @Column(name = "data_inicio_Seguimento")
     private LocalDate dataInicioSeguimento;
 
     public UsuarioRelacionamento() {
     }
 
-    public UsuarioRelacionamento(Usuario usuarioSeguidor, Usuario usuarioSeguido) {
+    public UsuarioRelacionamento(LocalDate dataInicioSeguimento, Usuario usuarioSeguidor, Usuario usuarioSeguido) {
         this.id.setUsuarioSeguido(usuarioSeguidor);
         this.id.setUsuarioSeguidor(usuarioSeguido);
-        this.dataInicioSeguimento = LocalDate.now();
+        this.dataInicioSeguimento = dataInicioSeguimento;
     }
 
     public UsuarioRelacionamentoPK getId() {

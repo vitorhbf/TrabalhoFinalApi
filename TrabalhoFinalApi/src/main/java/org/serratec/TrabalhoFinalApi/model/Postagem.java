@@ -8,7 +8,6 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +50,7 @@ public class Postagem {
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 	
-	@OneToMany(mappedBy = "postagem", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "postagem", cascade = CascadeType.ALL)
 	private List<Comentario> usuarioComentario = new ArrayList<>();
 
 	public Long getId() {

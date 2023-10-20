@@ -48,7 +48,7 @@ public class PostagemService {
 			return false;
 		}
 
-		postagemRepository.delete(postagemOpt.get());
+		postagemRepository.deleteById(postagemOpt.get().getId());
 		return true;
 	}
 
