@@ -1,5 +1,6 @@
 package org.serratec.TrabalhoFinalApi.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.serratec.TrabalhoFinalApi.model.UsuarioRelacionamento;
@@ -12,5 +13,7 @@ public interface UsuarioRelacionamentoRepository extends JpaRepository<UsuarioRe
 
 	Optional<UsuarioRelacionamento> findByIdUsuarioSeguidorIdAndIdUsuarioSeguidoId(Long seguidorId, Long seguidoId);
     void deleteByIdUsuarioSeguidorIdAndIdUsuarioSeguidoId(Long seguidorId, Long seguidoId);
+    List<UsuarioRelacionamento> findByIdUsuarioSeguidoId(Long seguidoId);
+    
 	
 }

@@ -1,11 +1,17 @@
 package org.serratec.TrabalhoFinalApi.model;
 
 import java.io.Serializable;
+
 import java.util.Objects;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Embeddable
 public class UsuarioRelacionamentoPK implements Serializable {
@@ -13,11 +19,17 @@ public class UsuarioRelacionamentoPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
-	@JoinColumn(name = "id_seguidor")
+	@NotNull(message = "O campo 'usuarioSeguidor' é obrigatório.")
+	@JoinColumn(name = "id_seguidor", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@Valid
 	private Usuario usuarioSeguidor;
 
 	@ManyToOne
-	@JoinColumn(name = "id_seguido")
+	@NotNull(message = "O campo 'usuarioSeguido' é obrigatório.")
+	@JoinColumn(name = "id_seguido", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@Valid
 	private Usuario usuarioSeguido;
 
 	public Usuario getUsuarioSeguidor() {

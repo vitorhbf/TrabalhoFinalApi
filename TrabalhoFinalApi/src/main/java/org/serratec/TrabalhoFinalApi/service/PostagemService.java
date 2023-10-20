@@ -51,5 +51,8 @@ public class PostagemService {
 		postagemRepository.deleteById(postagemOpt.get().getId());
 		return true;
 	}
+	public List<Postagem> getPostagensByUsuarioId(Long idUsuario) {
+	    return postagemRepository.findByUsuarioId(idUsuario);
+	}
 
 }

@@ -1,11 +1,15 @@
 package org.serratec.TrabalhoFinalApi.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.serratec.TrabalhoFinalApi.dto.PostagemDTO;
 import org.serratec.TrabalhoFinalApi.model.Postagem;
+import org.serratec.TrabalhoFinalApi.model.Usuario;
 import org.serratec.TrabalhoFinalApi.service.PostagemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,35 +36,89 @@ public class PostagemController {
 		return postagemService.getAllPostagens();
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Postagem> getPostagemById(@Valid @PathVariable Long id) {
-		Optional<Postagem> postagem = postagemService.getPostagemById(id);
-		return postagem.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	@GetMapping("{idUsuario}")
+	public ResponseEntity<List<PostagemDTO>> getPostagensByUsuarioId(@Valid @PathVariable Long idUsuario) {
+		List<Postagem> postagens = postagemService.getPostagensByUsuarioId(idUsuario);
+		List<PostagemDTO> postagemDTOs = new ArrayList<>();
+
+		for (Postagem postagem : postagens) {
+			PostagemDTO postagemDTO = new PostagemDTO();
+			postagemDTO.setId(postagem.getId());
+			postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			String dataFormatada = dateFormat.format(postagem.getDataPostagem());
+			postagemDTO.setDataPostagem(dataFormatada);
+
+			postagemDTO.setAutorNome(postagem.getUsuario().getNome());
+			postagemDTO.setAutorSobrenome(postagem.getUsuario().getSobrenome());
+			postagemDTO.setAutorEmail(postagem.getUsuario().getEmail());
+
+			postagemDTOs.add(postagemDTO);
+		}
+
+		return new ResponseEntity<>(postagemDTOs, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<Postagem> createPostagem(@Valid @RequestBody Postagem postagem) {
+	public ResponseEntity<PostagemDTO> createPostagem(@Valid @RequestBody Postagem postagem) {
 		Postagem createdPostagem = postagemService.createPostagem(postagem);
-		return new ResponseEntity<>(createdPostagem, HttpStatus.CREATED);
+
+		PostagemDTO postagemDTO = new PostagemDTO();
+		postagemDTO.setId(createdPostagem.getId());
+		postagemDTO.setConteudoPostagem(createdPostagem.getConteudoPostagem());
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String dataFormatada = dateFormat.format(createdPostagem.getDataPostagem());
+		postagemDTO.setDataPostagem(dataFormatada);
+
+		postagemDTO.setAutorNome(createdPostagem.getUsuario().getNome());
+		postagemDTO.setAutorSobrenome(createdPostagem.getUsuario().getSobrenome());
+		postagemDTO.setAutorEmail(createdPostagem.getUsuario().getEmail());
+
+		return new ResponseEntity<>(postagemDTO, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Postagem> updatePostagem(@Valid @PathVariable Long id,
-			@Valid @RequestBody Postagem postagem) {
-		Postagem updatedPostagem = postagemService.updatePostagem(id, postagem);
-		return updatedPostagem != null ? new ResponseEntity<>(updatedPostagem, HttpStatus.OK)
-				: new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Postagem> deletarPostagem(@Valid @PathVariable Long id) {
-		boolean resultado = postagemService.deletePostagem(id);
-		if(!resultado){
+	public ResponseEntity<PostagemDTO> updatePostagem(@PathVariable Long id,
+			@Valid @RequestBody Postagem postagemAtualizada) {
+		Postagem postagem = postagemService.updatePostagem(id, postagemAtualizada);
+
+		if (postagem != null) {
+			PostagemDTO postagemDTO = mapToDTO(postagem);
+			return new ResponseEntity<>(postagemDTO, HttpStatus.OK);
+		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		return new ResponseEntity<Postagem>(HttpStatus.OK);
 	}
+
+	private PostagemDTO mapToDTO(Postagem postagem) {
+		PostagemDTO postagemDTO = new PostagemDTO();
+		postagemDTO.setId(postagem.getId());
+		postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String dataFormatada = dateFormat.format(postagem.getDataPostagem());
+		postagemDTO.setDataPostagem(dataFormatada);
+
+		Usuario autor = postagem.getUsuario();
+		postagemDTO.setAutorNome(autor.getNome());
+		postagemDTO.setAutorSobrenome(autor.getSobrenome());
+		postagemDTO.setAutorEmail(autor.getEmail());
+
+		return postagemDTO;
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deletarPostagem(@Valid @PathVariable Long id) {
+	    boolean resultado = postagemService.deletePostagem(id);
+	    if (!resultado) {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+
+	    String mensagem = "A postagem com ID " + id + " foi excluída com sucesso.";
+	    return new ResponseEntity<>(mensagem, HttpStatus.OK);
+	}
+
 
 }

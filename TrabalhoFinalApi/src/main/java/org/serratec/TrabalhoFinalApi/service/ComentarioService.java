@@ -45,4 +45,8 @@ public class ComentarioService {
 	public void deleteComentario(Long id) {
 		comentarioRepository.deleteById(id);
 	}
+
+	public List<Comentario> getComentariosByPostagemId(Long idPostagem) {
+		return comentarioRepository.findByPostagemId(idPostagem);
+	}
 }

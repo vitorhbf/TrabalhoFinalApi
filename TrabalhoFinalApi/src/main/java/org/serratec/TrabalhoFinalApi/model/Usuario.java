@@ -30,38 +30,39 @@ public class Usuario {
 
 	@NotBlank(message = "Preencha o nome do Usuario")
 	@Size(max = 60)
-	@Column(name = "nome",nullable = false, length = 60)
+	@Column(name = "nome", nullable = false, length = 60)
 	private String nome;
-	
+
 	@NotBlank(message = "Preencha o sobrenome do Usuario")
 	@Size(max = 60)
-	@Column(name = "sobrenome",nullable = false, length = 60)
+	@Column(name = "sobrenome", nullable = false, length = 60)
 	private String sobrenome;
-	
+
 	@NotBlank(message = "Preencha o email do Usuario")
 	@Size(max = 60)
-	@Column(name = "email",nullable = false, length = 60)
+	@Column(name = "email", nullable = false, length = 60)
 	private String email;
 
 	@NotBlank(message = "Preencha a senha do Usuario")
 	@Size(max = 60)
-	@Column(name = "senha",nullable = false, length = 255)
+	@Column(name = "senha", nullable = false, length = 255)
 	private String senha;
 
 	@NotNull(message = "Preencha a data de nascimento do Usuario")
-	@Column(name = "data_nascimento",nullable = false)
+	@Column(name = "data_nascimento", nullable = false)
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dataNascimento;
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private List<Postagem> usuarioPostagem = new ArrayList<>();
-	
-	/* @OneToMany(mappedBy = "usuarioSeguidor")
-    private List<UsuarioRelacionamento> UsuarioSeguidores = new ArrayList<>();
-	*/
+
+	/*
+	 * @OneToMany(mappedBy = "usuarioSeguidor") private List<UsuarioRelacionamento>
+	 * UsuarioSeguidores = new ArrayList<>();
+	 */
 	public Usuario() {
-	} 
+	}
 
 	public Usuario(Long id, String nome, String sobrenome, String email, String senha, Date dataNascimento) {
 		super();
@@ -120,8 +121,6 @@ public class Usuario {
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
-
-	
 
 	@Override
 	public int hashCode() {

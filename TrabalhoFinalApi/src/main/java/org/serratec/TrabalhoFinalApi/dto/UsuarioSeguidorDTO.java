@@ -1,6 +1,7 @@
 package org.serratec.TrabalhoFinalApi.dto;
 
-public class UsuarioDTO {
+public class UsuarioSeguidorDTO {
+
 	private Long id;
 	private String nome;
 	private String sobrenome;

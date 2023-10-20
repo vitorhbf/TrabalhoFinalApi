@@ -11,35 +11,35 @@ import javax.persistence.Table;
 @Table(name = "usuario_relacionamento")
 public class UsuarioRelacionamento {
 
-    @EmbeddedId
-    private UsuarioRelacionamentoPK id = new UsuarioRelacionamentoPK();
+	@EmbeddedId
+	private UsuarioRelacionamentoPK id = new UsuarioRelacionamentoPK();
 
-    @Column(name = "data_inicio_Seguimento")
-    private LocalDate dataInicioSeguimento;
+	@Column(name = "data_inicio_Seguimento")
+	private LocalDate dataInicioSeguimento;
 
-    public UsuarioRelacionamento() {
-    }
+	public UsuarioRelacionamento() {
+	}
 
-    public UsuarioRelacionamento(LocalDate dataInicioSeguimento, Usuario usuarioSeguidor, Usuario usuarioSeguido) {
-        this.id.setUsuarioSeguido(usuarioSeguidor);
-        this.id.setUsuarioSeguidor(usuarioSeguido);
-        this.dataInicioSeguimento = dataInicioSeguimento;
-    }
+	public UsuarioRelacionamento(LocalDate dataInicioSeguimento, Usuario usuarioSeguidor, Usuario usuarioSeguido) {
+		this.id.setUsuarioSeguido(usuarioSeguidor);
+		this.id.setUsuarioSeguidor(usuarioSeguido);
+		this.dataInicioSeguimento = dataInicioSeguimento;
+	}
 
-    public UsuarioRelacionamentoPK getId() {
-        return id;
-    }
+	public UsuarioRelacionamentoPK getId() {
+		return id;
+	}
 
-    public void setId(UsuarioRelacionamentoPK id) {
-        this.id = id;
-    }
+	public void setId(UsuarioRelacionamentoPK id) {
+		this.id = id;
+	}
 
-    public LocalDate getDataCriacao() {
-        return dataInicioSeguimento;
-    }
+	public LocalDate getDataCriacao() {
+		return dataInicioSeguimento;
+	}
 
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataInicioSeguimento = dataCriacao;
-    }
+	public void setDataCriacao(LocalDate dataCriacao) {
+		this.dataInicioSeguimento = dataCriacao;
+	}
 
 }

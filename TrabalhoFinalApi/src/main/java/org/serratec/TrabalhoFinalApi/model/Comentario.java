@@ -11,7 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -29,16 +33,26 @@ public class Comentario {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dataInicioSeguimento;
 
+	@NotBlank(message = "Preencha o conteudo do comentário ")
+	@Column(name = "conteudo_comentario", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private String conteudoComentario;
+
 	@ManyToOne
 	@JoinColumn(name = "id_postagem")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Postagem postagem;
-	
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getConteudoComentario() {
+		return this.conteudoComentario;
 	}
 
 	public Date getDataInicioSeguimento() {
@@ -55,6 +69,10 @@ public class Comentario {
 
 	public void setPostagem(Postagem postagem) {
 		this.postagem = postagem;
+	}
+
+	public void setConteudoComentario(String conteudoComentario) {
+		this.conteudoComentario = conteudoComentario;
 	}
 
 }
