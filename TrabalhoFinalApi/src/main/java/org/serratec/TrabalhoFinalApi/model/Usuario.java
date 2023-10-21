@@ -20,38 +20,46 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 public class Usuario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_usuario")
+	@ApiModelProperty(value = "Identificador unico do usuário")
 	private Long id;
 
 	@NotBlank(message = "Preencha o nome do Usuario")
 	@Size(max = 60)
 	@Column(name = "nome", nullable = false, length = 60)
+	@ApiModelProperty(value = "Nome do usuário", required = true)
 	private String nome;
 
 	@NotBlank(message = "Preencha o sobrenome do Usuario")
 	@Size(max = 60)
 	@Column(name = "sobrenome", nullable = false, length = 60)
+	@ApiModelProperty(value = "Sobrenome do usuário", required = true)
 	private String sobrenome;
 
 	@NotBlank(message = "Preencha o email do Usuario")
 	@Size(max = 60)
 	@Column(name = "email", nullable = false, length = 60)
+	@ApiModelProperty(value = "Endereço de e-mail do usuário", required = true)
 	private String email;
 
 	@NotBlank(message = "Preencha a senha do Usuario")
 	@Size(max = 60)
 	@Column(name = "senha", nullable = false, length = 255)
+	@ApiModelProperty(value = "Senha do usuário", required = true)
 	private String senha;
 
 	@NotNull(message = "Preencha a data de nascimento do Usuario")
 	@Column(name = "data_nascimento", nullable = false)
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@ApiModelProperty(value = "Data de nascimento do usuário", required = true)
 	private Date dataNascimento;
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
@@ -59,7 +67,7 @@ public class Usuario {
 
 	@OneToMany(mappedBy = "id.usuarioSeguidor", cascade = CascadeType.REMOVE)
 	private List<UsuarioRelacionamento> UsuarioSeguidor = new ArrayList<>();
-	
+
 	@OneToMany(mappedBy = "id.usuarioSeguido", cascade = CascadeType.REMOVE)
 	private List<UsuarioRelacionamento> UsuarioSeguido = new ArrayList<>();
 

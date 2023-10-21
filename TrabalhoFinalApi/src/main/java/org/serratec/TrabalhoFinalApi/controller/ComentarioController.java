@@ -28,23 +28,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/comentarios")
 public class ComentarioController {
 	private final ComentarioService comentarioService;
-
-	
 
 	public ComentarioController(ComentarioService comentarioService) {
 		this.comentarioService = comentarioService;
 	}
 
 	@GetMapping
+	@ApiOperation(value = "Lista todos os comentários", notes = "Lista de comentários")
 	public List<Comentario> getAllComentarios() {
 		return comentarioService.getAllComentarios();
 	}
 
 	@GetMapping("/{idPostagem}")
+	@ApiOperation(value = "Lista comentários por ID de postagem", notes = "Lista de comentários relacionados a uma postagem específica")
 	public ResponseEntity<?> getComentariosByPostagemId(@Valid @PathVariable Long idPostagem) {
 		try {
 			List<Comentario> comentarios = comentarioService.getComentariosByPostagemId2(idPostagem);
@@ -56,7 +58,7 @@ public class ComentarioController {
 				comentarioDTO.setConteudoComentario(comentario.getConteudoComentario());
 
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				String dataFormatada = dateFormat.format(comentario.getDataInicioSeguimento());
+				String dataFormatada = dateFormat.format(comentario.getDataComentario());
 				comentarioDTO.setDataComentario(dataFormatada);
 
 				Usuario usuario = comentario.getPostagem().getUsuario();
@@ -78,6 +80,7 @@ public class ComentarioController {
 	}
 
 	@PostMapping
+	@ApiOperation(value = "Cria um novo comentário", notes = "Cria um novo comentário com os dados fornecidos")
 	public ResponseEntity<?> createComentario(@Valid @RequestBody Comentario comentario,
 			@Autowired PostagemService postagemService) {
 		if (comentario.getPostagem().getId() != null) {
@@ -89,6 +92,7 @@ public class ComentarioController {
 	}
 
 	@PutMapping("/{id}")
+	@ApiOperation(value = "Atualiza um comentário por ID", notes = "Atualiza um comentário existente com os dados fornecidos")
 	public ResponseEntity<?> updateComentario(@Valid @PathVariable Long id, @Valid @RequestBody Comentario comentario) {
 		Comentario updatedComentario = comentarioService.updateComentario(id, comentario);
 
@@ -108,7 +112,7 @@ public class ComentarioController {
 		comentarioDTO.setConteudoComentario(comentario.getConteudoComentario());
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String dataFormatada = dateFormat.format(comentario.getDataInicioSeguimento());
+		String dataFormatada = dateFormat.format(comentario.getDataComentario());
 		comentarioDTO.setDataComentario(dataFormatada);
 
 		Postagem postagem = comentario.getPostagem();
@@ -131,13 +135,14 @@ public class ComentarioController {
 	}
 
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Exclui um comentário por ID", notes = "Remove um comentário com base no ID fornecido")
 	public ResponseEntity<String> deletarComentario(@Valid @PathVariable Long id) {
-	    try {
-	        comentarioService.deleteComentario(id);
-	        return ResponseEntity.ok("Comentário com ID " + id + " excluído com sucesso.");
-	    } catch (ComentarioNotFoundException ex) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-	    }
+		try {
+			comentarioService.deleteComentario(id);
+			return ResponseEntity.ok("Comentário com ID " + id + " excluído com sucesso.");
+		} catch (ComentarioNotFoundException ex) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+		}
 	}
 
 }

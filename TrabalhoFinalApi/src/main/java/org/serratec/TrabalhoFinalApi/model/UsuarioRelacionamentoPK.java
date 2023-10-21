@@ -1,18 +1,18 @@
 package org.serratec.TrabalhoFinalApi.model;
 
 import java.io.Serializable;
-
 import java.util.Objects;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Embeddable
 public class UsuarioRelacionamentoPK implements Serializable {
@@ -24,6 +24,7 @@ public class UsuarioRelacionamentoPK implements Serializable {
 	@JoinColumn(name = "id_seguidor", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@Valid
+	@ApiModelProperty(value = "Usuário seguidor", required = true)
 	private Usuario usuarioSeguidor;
 
 	@ManyToOne
@@ -31,6 +32,7 @@ public class UsuarioRelacionamentoPK implements Serializable {
 	@JoinColumn(name = "id_seguido", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@Valid
+	@ApiModelProperty(value = "Usuário seguido", required = true)
 	private Usuario usuarioSeguido;
 
 	public Usuario getUsuarioSeguidor() {

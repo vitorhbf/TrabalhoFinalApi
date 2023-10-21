@@ -9,6 +9,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "usuario_relacionamento")
 public class UsuarioRelacionamento {
@@ -18,8 +20,9 @@ public class UsuarioRelacionamento {
 
 	@CreationTimestamp
 	@Column(name = "data_inicio_Seguimento")
+	@ApiModelProperty(value = "Data de início do seguimento", required = true)
 	private LocalDate dataInicioSeguimento;
-	
+
 	public UsuarioRelacionamento() {
 	}
 

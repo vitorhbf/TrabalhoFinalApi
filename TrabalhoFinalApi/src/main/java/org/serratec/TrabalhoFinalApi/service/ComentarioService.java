@@ -40,7 +40,7 @@ public class ComentarioService {
 		Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
 		if (comentarioOpt.isPresent()) {
 			Comentario comentarioBd = comentarioOpt.get();
-			comentarioBd.setDataInicioSeguimento(comentario.getDataInicioSeguimento());
+			comentarioBd.setDataComentario(comentario.getDataComentario());
 			comentarioBd.setConteudoComentario(comentario.getConteudoComentario());
 			return comentarioRepository.save(comentarioBd);
 		}

@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/relacionamentos")
 public class UsuarioRelacionamentoController {
@@ -45,11 +47,13 @@ public class UsuarioRelacionamentoController {
 	}
 
 	@GetMapping
+	@ApiOperation(value = "Lista todos os relacionamentos de usuários", notes = "Lista de relacionamentos entre usuários")
 	public List<UsuarioRelacionamento> getAllUsuarioRelacionamentos() {
 		return usuarioRelacionamentoService.getAllUsuarioRelacionamentos();
 	}
 
 	@GetMapping("/seguidores/{seguidoId}")
+	@ApiOperation(value = "Lista seguidores de um usuário", notes = "Lista de usuários que seguem o usuário especificado")
 	public ResponseEntity<List<UsuarioSeguidorDTO>> getSeguidores(@Valid @PathVariable Long seguidoId) {
 		List<UsuarioRelacionamento> seguidores = usuarioRelacionamentoService.getUsuarioSeguidores(seguidoId);
 		List<UsuarioSeguidorDTO> seguidoresDTO = new ArrayList<>();
@@ -74,6 +78,7 @@ public class UsuarioRelacionamentoController {
 	}
 
 	@PostMapping("/seguir")
+	@ApiOperation(value = "Seguir um usuário", notes = "Cria um relacionamento de seguir entre dois usuários")
 	public ResponseEntity<UsuarioRelacionamentoDTO> seguirUsuario(
 			@Valid @RequestBody UsuarioRelacionamento usuarioRelacionamento) {
 		if (usuarioRelacionamento == null || usuarioRelacionamento.getId() == null
@@ -114,6 +119,7 @@ public class UsuarioRelacionamentoController {
 	}
 
 	@DeleteMapping("/deixar-de-seguir/{seguidorId}/{seguidoId}")
+	@ApiOperation(value = "Deixar de seguir um usuário", notes = "Remove o relacionamento de seguir entre dois usuários")
 	public ResponseEntity<String> deixarDeSeguir(@Valid @PathVariable Long seguidorId,
 			@Valid @PathVariable Long seguidoId) {
 		Optional<UsuarioRelacionamento> relacionamentoExistente = usuarioRelacionamentoService

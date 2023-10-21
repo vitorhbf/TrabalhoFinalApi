@@ -19,28 +19,34 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 public class Comentario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_comentario")
+	@ApiModelProperty(value = "Identificador único do comentário")
 	private Long id;
 
-	@NotNull(message = "Preencha a data do seguimento ")
+	@NotNull(message = "Preencha a data do comentário")
 	@Column(name = "data_inicio_seguimento", nullable = false)
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date dataInicioSeguimento;
+	@ApiModelProperty(value = "Data de início do comentário", required = true)
+	private Date dataComentario;
 
 	@NotBlank(message = "Preencha o conteudo do comentário ")
 	@Column(name = "conteudo_comentario", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ApiModelProperty(value = "Conteúdo do comentário", required = true)
 	private String conteudoComentario;
 
 	@ManyToOne
 	@JoinColumn(name = "id_postagem")
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ApiModelProperty(value = "Postagem associada ao comentário", required = true)
 	private Postagem postagem;
 
 	public Long getId() {
@@ -55,12 +61,12 @@ public class Comentario {
 		return this.conteudoComentario;
 	}
 
-	public Date getDataInicioSeguimento() {
-		return dataInicioSeguimento;
+	public Date getDataComentario() {
+		return dataComentario;
 	}
 
-	public void setDataInicioSeguimento(Date dataInicioSeguimento) {
-		this.dataInicioSeguimento = dataInicioSeguimento;
+	public void setDataComentario(Date dataComentario) {
+		this.dataComentario = dataComentario;
 	}
 
 	public Postagem getPostagem() {

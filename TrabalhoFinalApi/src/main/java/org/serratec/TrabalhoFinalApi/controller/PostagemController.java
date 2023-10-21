@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/postagens")
 public class PostagemController {
@@ -35,11 +37,13 @@ public class PostagemController {
 	}
 
 	@GetMapping
+	@ApiOperation(value = "Lista todas as postagens", notes = "Lista de postagens")
 	public List<Postagem> getAllPostagens() {
 		return postagemService.getAllPostagens();
 	}
 
 	@GetMapping("/postagem/{id}")
+	@ApiOperation(value = "Busca uma postagem por ID", notes = "Recupera uma postagem com base no ID fornecido")
 	public ResponseEntity<PostagemDTO> getPostagemPorId(@PathVariable Long id) {
 		Postagem postagem = postagemService.buscarPostagemPorId(id);
 
@@ -52,6 +56,7 @@ public class PostagemController {
 	}
 
 	@GetMapping("/usuario/{idUsuario}")
+	@ApiOperation(value = "Lista postagens por ID de usuário", notes = "Lista de postagens relacionadas a um usuário específico")
 	public ResponseEntity<List<PostagemDTO>> getPostagensByUsuarioId(@PathVariable Long idUsuario)
 			throws UsuarioValidation {
 		List<PostagemDTO> postagens = postagemService.getPostagensByUsuarioId(idUsuario);
@@ -60,6 +65,7 @@ public class PostagemController {
 	}
 
 	@PostMapping
+	@ApiOperation(value = "Cria uma nova postagem", notes = "Cria uma nova postagem com os dados fornecidos")
 	public ResponseEntity<PostagemDTO> createPostagem(@Valid @RequestBody Postagem postagem) {
 		Postagem createdPostagem = postagemService.createPostagem(postagem);
 
@@ -79,6 +85,7 @@ public class PostagemController {
 	}
 
 	@PutMapping("/{id}")
+	@ApiOperation(value = "Atualiza uma postagem por ID", notes = "Atualiza uma postagem existente com os dados fornecidos")
 	public ResponseEntity<PostagemDTO> updatePostagem(@PathVariable Long id,
 			@Valid @RequestBody Postagem postagemAtualizada) {
 		Postagem postagem = postagemService.updatePostagem(id, postagemAtualizada);
@@ -109,6 +116,7 @@ public class PostagemController {
 	}
 
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Exclui uma postagem por ID", notes = "Remove uma postagem com base no ID fornecido")
 	public ResponseEntity<String> deletarPostagem(@Valid @PathVariable Long id) {
 		try {
 

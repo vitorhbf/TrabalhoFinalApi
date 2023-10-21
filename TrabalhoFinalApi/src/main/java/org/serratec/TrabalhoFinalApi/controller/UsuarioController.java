@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -32,6 +34,7 @@ public class UsuarioController {
 	}
 
 	@GetMapping
+	@ApiOperation(value = "Lista todos os usuários", notes = "Lista de usuários")
 	public List<UsuarioDTO> getAllUsuarios() {
 		List<Usuario> usuarios = usuarioService.getAllUsuarios();
 
@@ -48,6 +51,7 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/{id}")
+	@ApiOperation(value = "Busca um usuário por ID", notes = "Recupera um usuário com base no ID fornecido")
 	public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable Long id) {
 		Optional<Usuario> usuario = usuarioService.getUsuarioById(id);
 
@@ -64,6 +68,7 @@ public class UsuarioController {
 	}
 
 	@PostMapping
+	@ApiOperation(value = "Cria um novo usuário", notes = "Cria um novo usuário com os dados fornecidos")
 	public ResponseEntity<UsuarioDTO> createUsuario(@Valid @RequestBody Usuario usuario) {
 		Usuario createdUsuario = usuarioService.createUsuario(usuario);
 
@@ -81,6 +86,7 @@ public class UsuarioController {
 	}
 
 	@PutMapping("/{id}")
+	@ApiOperation(value = "Atualiza um usuário por ID", notes = "Atualiza um usuário existente com os dados fornecidos")
 	public ResponseEntity<UsuarioDTO> updateUsuario(@Valid @PathVariable Long id, @Valid @RequestBody Usuario usuario) {
 	    Usuario updatedUsuario = usuarioService.updateUsuario(id, usuario);
 
@@ -98,6 +104,7 @@ public class UsuarioController {
 	}
 
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Exclui um usuário por ID", notes = "Remove um usuário com base no ID fornecido")
     public ResponseEntity<String> deletar(@PathVariable Long id) {
         try {
             
