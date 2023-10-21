@@ -1,6 +1,7 @@
 package org.serratec.TrabalhoFinalApi.dto;
 
 public class UsuarioDTO {
+
 	private Long id;
 	private String nome;
 	private String sobrenome;
@@ -37,5 +38,4 @@ public class UsuarioDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
 }

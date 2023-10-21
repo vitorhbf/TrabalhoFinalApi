@@ -20,5 +20,4 @@ public class SeguirUsuarioDTO {
 	public void setSeguidoId(Long seguidoId) {
 		this.seguidoId = seguidoId;
 	}
-
 }

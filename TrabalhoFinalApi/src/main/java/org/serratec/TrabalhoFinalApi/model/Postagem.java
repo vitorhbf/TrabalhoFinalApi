@@ -120,5 +120,4 @@ public class Postagem {
 		Postagem other = (Postagem) obj;
 		return Objects.equals(id, other.id);
 	}
-
 }

@@ -68,15 +68,12 @@ public class PostagemController {
 	@ApiOperation(value = "Cria uma nova postagem", notes = "Cria uma nova postagem com os dados fornecidos")
 	public ResponseEntity<PostagemDTO> createPostagem(@Valid @RequestBody Postagem postagem) {
 		Postagem createdPostagem = postagemService.createPostagem(postagem);
-
 		PostagemDTO postagemDTO = new PostagemDTO();
 		postagemDTO.setId(createdPostagem.getId());
 		postagemDTO.setConteudoPostagem(createdPostagem.getConteudoPostagem());
-
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dataFormatada = dateFormat.format(createdPostagem.getDataPostagem());
 		postagemDTO.setDataPostagem(dataFormatada);
-
 		postagemDTO.setAutorNome(createdPostagem.getUsuario().getNome());
 		postagemDTO.setAutorSobrenome(createdPostagem.getUsuario().getSobrenome());
 		postagemDTO.setAutorEmail(createdPostagem.getUsuario().getEmail());
@@ -102,11 +99,9 @@ public class PostagemController {
 		PostagemDTO postagemDTO = new PostagemDTO();
 		postagemDTO.setId(postagem.getId());
 		postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
-
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dataFormatada = dateFormat.format(postagem.getDataPostagem());
 		postagemDTO.setDataPostagem(dataFormatada);
-
 		Usuario autor = postagem.getUsuario();
 		postagemDTO.setAutorNome(autor.getNome());
 		postagemDTO.setAutorSobrenome(autor.getSobrenome());
@@ -119,17 +114,14 @@ public class PostagemController {
 	@ApiOperation(value = "Exclui uma postagem por ID", notes = "Remove uma postagem com base no ID fornecido")
 	public ResponseEntity<String> deletarPostagem(@Valid @PathVariable Long id) {
 		try {
-
 			Postagem postagem = postagemService.verificarExistenciaPostagem(id);
-
 			postagemService.deletePostagem(id);
-
 			String mensagem = "A postagem com ID " + id + " foi excluída com sucesso.";
+			
 			return ResponseEntity.ok(mensagem);
 		} catch (PostagemNotFoundException ex) {
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 		}
 	}
-
 }

@@ -80,5 +80,4 @@ public class Comentario {
 	public void setConteudoComentario(String conteudoComentario) {
 		this.conteudoComentario = conteudoComentario;
 	}
-
 }

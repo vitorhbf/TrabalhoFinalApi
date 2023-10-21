@@ -13,37 +13,36 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioRelacionamentoService {
-    private final UsuarioRelacionamentoRepository usuarioRelacionamentoRepository;
+	private final UsuarioRelacionamentoRepository usuarioRelacionamentoRepository;
 
-    
-    public UsuarioRelacionamentoService(UsuarioRelacionamentoRepository usuarioRelacionamentoRepository) {
-        this.usuarioRelacionamentoRepository = usuarioRelacionamentoRepository;
-    }
+	public UsuarioRelacionamentoService(UsuarioRelacionamentoRepository usuarioRelacionamentoRepository) {
+		this.usuarioRelacionamentoRepository = usuarioRelacionamentoRepository;
+	}
 
-    public List<UsuarioRelacionamento> getAllUsuarioRelacionamentos() {
-        return usuarioRelacionamentoRepository.findAll();
-    }
+	public List<UsuarioRelacionamento> getAllUsuarioRelacionamentos() {
+		return usuarioRelacionamentoRepository.findAll();
+	}
 
-    public Optional<UsuarioRelacionamento> getUsuarioRelacionamentoById(Long seguidorId, Long seguidoId) {
-        return usuarioRelacionamentoRepository.findByIdUsuarioSeguidorIdAndIdUsuarioSeguidoId(seguidorId, seguidoId);
-    }
+	public Optional<UsuarioRelacionamento> getUsuarioRelacionamentoById(Long seguidorId, Long seguidoId) {
+		return usuarioRelacionamentoRepository.findByIdUsuarioSeguidorIdAndIdUsuarioSeguidoId(seguidorId, seguidoId);
+	}
 
-    public UsuarioRelacionamento createUsuarioRelacionamento(UsuarioRelacionamento usuarioRelacionamento) {
-        return usuarioRelacionamentoRepository.save(usuarioRelacionamento);
-    }
+	public UsuarioRelacionamento createUsuarioRelacionamento(UsuarioRelacionamento usuarioRelacionamento) {
+		return usuarioRelacionamentoRepository.save(usuarioRelacionamento);
+	}
 
-    @Transactional
-    public void deleteUsuarioRelacionamento(Long seguidorId, Long seguidoId) {
-        usuarioRelacionamentoRepository.deleteByIdUsuarioSeguidorIdAndIdUsuarioSeguidoId(seguidorId, seguidoId);
-    }
-    public List<UsuarioRelacionamento> getUsuarioSeguidores(Long seguidoId) {
-        List<UsuarioRelacionamento> seguidores = usuarioRelacionamentoRepository.findByIdUsuarioSeguidoId(seguidoId);
+	@Transactional
+	public void deleteUsuarioRelacionamento(Long seguidorId, Long seguidoId) {
+		usuarioRelacionamentoRepository.deleteByIdUsuarioSeguidorIdAndIdUsuarioSeguidoId(seguidorId, seguidoId);
+	}
 
-        if (seguidores.isEmpty()) {
-            throw new UsuarioNaoEncontradoException("Nenhum seguidor encontrado para o usuário com ID: " + seguidoId);
-        }
+	public List<UsuarioRelacionamento> getUsuarioSeguidores(Long seguidoId) {
+		List<UsuarioRelacionamento> seguidores = usuarioRelacionamentoRepository.findByIdUsuarioSeguidoId(seguidoId);
 
-        return seguidores;
-    }
+		if (seguidores.isEmpty()) {
+			throw new UsuarioNaoEncontradoException("Nenhum seguidor encontrado para o usuário com ID: " + seguidoId);
+		}
+
+		return seguidores;
+	}
 }
-

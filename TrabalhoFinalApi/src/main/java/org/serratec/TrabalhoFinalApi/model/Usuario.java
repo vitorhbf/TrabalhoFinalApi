@@ -148,5 +148,4 @@ public class Usuario {
 		Usuario other = (Usuario) obj;
 		return Objects.equals(id, other.id);
 	}
-
 }

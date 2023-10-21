@@ -45,7 +45,7 @@ public class ComentarioController {
 		return comentarioService.getAllComentarios();
 	}
 
-	@GetMapping("/{idPostagem}")
+	@GetMapping("/postagem/{idPostagem}")
 	@ApiOperation(value = "Lista comentários por ID de postagem", notes = "Lista de comentários relacionados a uma postagem específica")
 	public ResponseEntity<?> getComentariosByPostagemId(@Valid @PathVariable Long idPostagem) {
 		try {
@@ -56,23 +56,18 @@ public class ComentarioController {
 				ComentarioDTO comentarioDTO = new ComentarioDTO();
 				comentarioDTO.setId(comentario.getId());
 				comentarioDTO.setConteudoComentario(comentario.getConteudoComentario());
-
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String dataFormatada = dateFormat.format(comentario.getDataComentario());
 				comentarioDTO.setDataComentario(dataFormatada);
-
 				Usuario usuario = comentario.getPostagem().getUsuario();
 				UsuarioDTO usuarioDTO = new UsuarioDTO();
 				usuarioDTO.setId(usuario.getId());
 				usuarioDTO.setNome(usuario.getNome());
 				usuarioDTO.setSobrenome(usuario.getSobrenome());
 				usuarioDTO.setEmail(usuario.getEmail());
-
 				comentarioDTO.setUsuario(usuarioDTO);
-
 				comentarioDTOs.add(comentarioDTO);
 			}
-
 			return new ResponseEntity<>(comentarioDTOs, HttpStatus.OK);
 		} catch (PostagemNotFoundException ex) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
@@ -100,7 +95,6 @@ public class ComentarioController {
 			ComentarioDTO comentarioDTO = mapToDTO(updatedComentario);
 			return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
 		} else {
-
 			String errorMessage = "A postagem associada ao comentário não foi encontrada.";
 			return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
 		}
@@ -110,11 +104,9 @@ public class ComentarioController {
 		ComentarioDTO comentarioDTO = new ComentarioDTO();
 		comentarioDTO.setId(comentario.getId());
 		comentarioDTO.setConteudoComentario(comentario.getConteudoComentario());
-
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dataFormatada = dateFormat.format(comentario.getDataComentario());
 		comentarioDTO.setDataComentario(dataFormatada);
-
 		Postagem postagem = comentario.getPostagem();
 		PostagemDTO postagemDTO = mapPostagemToDTO(postagem);
 		comentarioDTO.setPostagem(postagemDTO);
@@ -126,7 +118,6 @@ public class ComentarioController {
 		PostagemDTO postagemDTO = new PostagemDTO();
 		postagemDTO.setId(postagem.getId());
 		postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
-
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dataFormatada = dateFormat.format(postagem.getDataPostagem());
 		postagemDTO.setDataPostagem(dataFormatada);
@@ -144,5 +135,4 @@ public class ComentarioController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 		}
 	}
-
 }

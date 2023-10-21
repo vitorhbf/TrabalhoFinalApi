@@ -1,6 +1,7 @@
 package org.serratec.TrabalhoFinalApi.dto;
 
 public class ComentarioDTO {
+	
 	private Long id;
 	private String conteudoComentario;
 	private String dataComentario;

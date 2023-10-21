@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
 
 	List<Comentario> findByPostagemId(Long idPostagem);
-
 }

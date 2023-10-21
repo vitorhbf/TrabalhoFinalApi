@@ -26,13 +26,14 @@ public class ComentarioService {
 	public Optional<Comentario> getComentarioById(Long id) {
 
 		if (comentarioRepository.existsById(id)) {
-			return comentarioRepository.findById(id);
 
+			return comentarioRepository.findById(id);
 		}
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "comentario com ID " + id + " não encontrada");
 	}
 
 	public Comentario createComentario(Comentario comentario) {
+
 		return comentarioRepository.save(comentario);
 	}
 
@@ -42,22 +43,23 @@ public class ComentarioService {
 			Comentario comentarioBd = comentarioOpt.get();
 			comentarioBd.setDataComentario(comentario.getDataComentario());
 			comentarioBd.setConteudoComentario(comentario.getConteudoComentario());
+
 			return comentarioRepository.save(comentarioBd);
 		}
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "comentario com ID " + id + " não encontrada");
 	}
 
 	public void deleteComentario(Long id) {
-	    Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
+		Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
 
-	    if (comentarioOpt.isEmpty()) {
-	        throw new ComentarioNotFoundException("ID do comentário não é válido: " + id);
-	    }
-
-	    comentarioRepository.deleteById(id);
+		if (comentarioOpt.isEmpty()) {
+			throw new ComentarioNotFoundException("ID do comentário não é válido: " + id);
+		}
+		comentarioRepository.deleteById(id);
 	}
 
 	public List<Comentario> getComentariosByPostagemId(Long idPostagem) {
+
 		return comentarioRepository.findByPostagemId(idPostagem);
 	}
 
@@ -70,5 +72,4 @@ public class ComentarioService {
 
 		return comentarios;
 	}
-
 }

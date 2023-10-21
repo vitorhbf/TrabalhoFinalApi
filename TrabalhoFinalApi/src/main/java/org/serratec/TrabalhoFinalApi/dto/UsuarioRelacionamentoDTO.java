@@ -1,22 +1,23 @@
 package org.serratec.TrabalhoFinalApi.dto;
 
 public class UsuarioRelacionamentoDTO {
-    private UsuarioSeguidorDTO seguidor;
-    private UsuarioSeguidoDTO seguido;
 
-    public UsuarioSeguidorDTO getSeguidor() {
-        return seguidor;
-    }
+	private UsuarioSeguidorDTO seguidor;
+	private UsuarioSeguidoDTO seguido;
 
-    public void setSeguidor(UsuarioSeguidorDTO seguidor) {
-        this.seguidor = seguidor;
-    }
+	public UsuarioSeguidorDTO getSeguidor() {
+		return seguidor;
+	}
 
-    public UsuarioSeguidoDTO getSeguido() {
-        return seguido;
-    }
+	public void setSeguidor(UsuarioSeguidorDTO seguidor) {
+		this.seguidor = seguidor;
+	}
 
-    public void setSeguido(UsuarioSeguidoDTO seguido) {
-        this.seguido = seguido;
-    }
+	public UsuarioSeguidoDTO getSeguido() {
+		return seguido;
+	}
+
+	public void setSeguido(UsuarioSeguidoDTO seguido) {
+		this.seguido = seguido;
+	}
 }

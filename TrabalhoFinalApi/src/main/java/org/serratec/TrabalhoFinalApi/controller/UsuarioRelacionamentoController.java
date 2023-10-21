@@ -33,10 +33,10 @@ public class UsuarioRelacionamentoController {
 
 	@Autowired
 	UsuarioRelacionamentoService usuarioRelacionamentoService;
-	
+
 	@Autowired
 	UsuarioService usuarioService;
-	
+
 	@Autowired
 	UsuarioRelacionamentoRepository usuarioRelacionamentoRepository;
 
@@ -63,10 +63,8 @@ public class UsuarioRelacionamentoController {
 			seguidorDTO.setId(seguidor.getId().getUsuarioSeguidor().getId());
 			seguidorDTO.setNome(seguidor.getId().getUsuarioSeguidor().getNome());
 			seguidorDTO.setSobrenome(seguidor.getId().getUsuarioSeguidor().getSobrenome());
-
 			String email = seguidor.getId().getUsuarioSeguidor().getEmail();
 			seguidorDTO.setEmail(email);
-
 			seguidoresDTO.add(seguidorDTO);
 		}
 
@@ -84,6 +82,7 @@ public class UsuarioRelacionamentoController {
 		if (usuarioRelacionamento == null || usuarioRelacionamento.getId() == null
 				|| usuarioRelacionamento.getId().getUsuarioSeguidor() == null
 				|| usuarioRelacionamento.getId().getUsuarioSeguido() == null) {
+			
 			return ResponseEntity.badRequest().build();
 		}
 
@@ -100,25 +99,23 @@ public class UsuarioRelacionamentoController {
 		seguidorDTO.setNome(seguidor.getNome());
 		seguidorDTO.setSobrenome(seguidor.getSobrenome());
 		seguidorDTO.setEmail(seguidor.getEmail());
-
+		
 		UsuarioSeguidoDTO seguidoDTO = new UsuarioSeguidoDTO();
 		seguidoDTO.setId(seguido.getId());
 		seguidoDTO.setNome(seguido.getNome());
 		seguidoDTO.setSobrenome(seguido.getSobrenome());
 		seguidoDTO.setEmail(seguido.getEmail());
-
+		
 		UsuarioRelacionamentoDTO usuarioRelacionamentoDTO = new UsuarioRelacionamentoDTO();
 		usuarioRelacionamentoDTO.setSeguidor(seguidorDTO);
 		usuarioRelacionamentoDTO.setSeguido(seguidoDTO);
-		
-		
+
 		usuarioRelacionamentoRepository.save(usuarioRelacionamento);
-		
 
 		return new ResponseEntity<>(usuarioRelacionamentoDTO, HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/deixar-de-seguir/{seguidorId}/{seguidoId}")
+	@DeleteMapping("/seguidor/{seguidorId}/deixar-de-seguir/{seguidoId}")
 	@ApiOperation(value = "Deixar de seguir um usuário", notes = "Remove o relacionamento de seguir entre dois usuários")
 	public ResponseEntity<String> deixarDeSeguir(@Valid @PathVariable Long seguidorId,
 			@Valid @PathVariable Long seguidoId) {
@@ -128,10 +125,10 @@ public class UsuarioRelacionamentoController {
 		if (relacionamentoExistente.isPresent()) {
 			usuarioRelacionamentoService.deleteUsuarioRelacionamento(seguidorId, seguidoId);
 			String mensagem = "Usuário de ID " + seguidorId + " deixou de seguir o usuário de ID " + seguidoId;
+			
 			return new ResponseEntity<>(mensagem, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>("Relação de seguidor não encontrada", HttpStatus.NOT_FOUND);
 		}
 	}
-
 }

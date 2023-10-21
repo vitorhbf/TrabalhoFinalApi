@@ -17,27 +17,23 @@ public class SwaggerConfig {
 	@Bean
 	public Docket api() {
 
-		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
+		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("org.serratec.TrabalhoFinalApi"))
 				.paths(PathSelectors.any())
 				.build()
 				.apiInfo(apiInfo());
-
 	}
-	
+
 	private ApiInfo apiInfo() {
-		
-		ApiInfo apiInfo = new ApiInfoBuilder()
-				.title("API de rede social")
+
+		ApiInfo apiInfo = new ApiInfoBuilder().title("API de rede social")
 				.description("Uma API para criar usuários, seguir usuários, postar e comentar em posts.")
 				.license("Apache License Version 2.0")
 				.licenseUrl("https://github.com/vitorhbf/TrabalhoFinalApi/")
 				.version("1.0.0")
-				.contact(new Contact("Serratec", "https://www.serratec.org/", "trabalho_api@gmail.com" ))
+				.contact(new Contact("Serratec", "https://www.serratec.org/", "trabalho_api@gmail.com"))
 				.build();
-				
-				return apiInfo;
-				
+
+		return apiInfo;
 	}
 }

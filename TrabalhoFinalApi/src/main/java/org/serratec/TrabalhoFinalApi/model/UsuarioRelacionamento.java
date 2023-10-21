@@ -47,5 +47,4 @@ public class UsuarioRelacionamento {
 	public void setDataCriacao(LocalDate dataCriacao) {
 		this.dataInicioSeguimento = dataCriacao;
 	}
-
 }

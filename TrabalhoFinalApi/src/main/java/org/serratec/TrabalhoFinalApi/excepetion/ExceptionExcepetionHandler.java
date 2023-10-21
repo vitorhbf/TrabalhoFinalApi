@@ -35,7 +35,6 @@ public class ExceptionExcepetionHandler extends ResponseEntityExceptionHandler {
 		for (FieldError e : ex.getBindingResult().getFieldErrors()) {
 			erros.add(e.getField() + ": " + e.getDefaultMessage());
 		}
-
 		ErroResposta erroResposta = new ErroResposta(status.value(), "Existem Campos Inválidos", LocalDateTime.now(),
 				erros);
 
@@ -85,5 +84,4 @@ public class ExceptionExcepetionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handlePostagemNotFound(PostagemNotFoundException ex, WebRequest request) {
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-
 }

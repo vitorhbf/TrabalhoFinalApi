@@ -1,6 +1,7 @@
 package org.serratec.TrabalhoFinalApi.dto;
 
 public class PostagemDTO {
+
 	private Long id;
 	private String conteudoPostagem;
 	private String dataPostagem;

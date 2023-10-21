@@ -18,14 +18,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class PostagemService {
-	
-	
+
 	private PostagemRepository postagemRepository;
-	
-	
+
 	private UsuarioRepository usuarioRepository;
 
-	public PostagemService(PostagemRepository postagemRepository,UsuarioRepository usuarioRepository) {
+	public PostagemService(PostagemRepository postagemRepository, UsuarioRepository usuarioRepository) {
 		this.postagemRepository = postagemRepository;
 		this.usuarioRepository = usuarioRepository;
 	}
@@ -36,9 +34,10 @@ public class PostagemService {
 
 	public Optional<Postagem> getPostagemById(Long id) {
 		if (postagemRepository.existsById(id)) {
+
 			return postagemRepository.findById(id);
 		}
-		throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Postagem com ID " + id + " não encontrada");
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Postagem com ID " + id + " não encontrada");
 	}
 
 	public Postagem createPostagem(Postagem postagem) {
@@ -48,9 +47,10 @@ public class PostagemService {
 	public Postagem updatePostagem(Long id, Postagem postagem) {
 		if (postagemRepository.existsById(id)) {
 			postagem.setId(id);
+
 			return postagemRepository.save(postagem);
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Postagem com ID " + id + " não encontrada"); 
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Postagem com ID " + id + " não encontrada");
 		}
 	}
 
@@ -58,27 +58,22 @@ public class PostagemService {
 
 		Optional<Postagem> postagemOpt = postagemRepository.findById(id);
 		if (postagemOpt.isEmpty()) {
-			
-			
+
 			return false;
 		}
-
 		postagemRepository.deleteById(postagemOpt.get().getId());
+
 		return true;
 	}
-	
+
 	public List<PostagemDTO> getPostagensByUsuarioId(Long idUsuario) throws UsuarioValidation {
-	    
+
 		Optional<Usuario> usuarioOTP = usuarioRepository.findById(idUsuario);
 		if (usuarioOTP.isEmpty()) {
-			
 			throw new UsuarioValidation("Usuario não Encontrado com o Id: " + idUsuario);
-				
 		}
-		
-		
 		List<Postagem> postagens = postagemRepository.findByUsuarioId(idUsuario);
-	    List<PostagemDTO> postagemDTOs = new ArrayList<>();
+		List<PostagemDTO> postagemDTOs = new ArrayList<>();
 
 		for (Postagem postagem : postagens) {
 			PostagemDTO postagemDTO = new PostagemDTO();
@@ -99,32 +94,31 @@ public class PostagemService {
 	}
 
 	public Postagem buscarPostagemPorId(Long postagemId) {
-        return postagemRepository.findByPostagemId(postagemId);
-    }
+		return postagemRepository.findByPostagemId(postagemId);
+	}
 
 	public PostagemDTO mapToDTO(Postagem postagem) {
-        PostagemDTO postagemDTO = new PostagemDTO();
-        postagemDTO.setId(postagem.getId());
-        postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
+		PostagemDTO postagemDTO = new PostagemDTO();
+		postagemDTO.setId(postagem.getId());
+		postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dataFormatada = dateFormat.format(postagem.getDataPostagem());
-        postagemDTO.setDataPostagem(dataFormatada);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String dataFormatada = dateFormat.format(postagem.getDataPostagem());
+		postagemDTO.setDataPostagem(dataFormatada);
 
-        Usuario autor = postagem.getUsuario();
-        postagemDTO.setAutorNome(autor.getNome());
-        postagemDTO.setAutorSobrenome(autor.getSobrenome());
-        postagemDTO.setAutorEmail(autor.getEmail());
+		Usuario autor = postagem.getUsuario();
+		postagemDTO.setAutorNome(autor.getNome());
+		postagemDTO.setAutorSobrenome(autor.getSobrenome());
+		postagemDTO.setAutorEmail(autor.getEmail());
 
-        return postagemDTO;
-    }
-	
+		return postagemDTO;
+	}
+
 	public Postagem verificarExistenciaPostagem(Long id) {
-        Optional<Postagem> postagemOpt = postagemRepository.findById(id);
-        if (postagemOpt.isEmpty()) {
-            throw new PostagemNotFoundException("Não existe postagem com o ID: " + id);
-        }
-        return postagemOpt.get();
-    }
-
+		Optional<Postagem> postagemOpt = postagemRepository.findById(id);
+		if (postagemOpt.isEmpty()) {
+			throw new PostagemNotFoundException("Não existe postagem com o ID: " + id);
+		}
+		return postagemOpt.get();
+	}
 }
