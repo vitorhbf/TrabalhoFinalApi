@@ -7,10 +7,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.serratec.TrabalhoFinalApi.dto.UsuarioDTO;
+import org.serratec.TrabalhoFinalApi.excepetion.UsuarioValidation;
 import org.serratec.TrabalhoFinalApi.model.Usuario;
-import org.serratec.TrabalhoFinalApi.repository.UsuarioRepository;
 import org.serratec.TrabalhoFinalApi.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,9 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioController {
 
 	private final UsuarioService usuarioService;
-
-	@Autowired
-	private UsuarioRepository usuarioRepository;
 
 	public UsuarioController(UsuarioService usuarioService) {
 		this.usuarioService = usuarioService;
@@ -102,13 +98,19 @@ public class UsuarioController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deletar(@PathVariable Long id) {
-		Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-		if (usuarioOpt.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-		usuarioRepository.deleteById(id);
-		return ResponseEntity.ok("Usuario Id: " + usuarioOpt.get().getNome() + " Excluido com Sucesso !");
-	} 
+    public ResponseEntity<String> deletar(@PathVariable Long id) {
+        try {
+            
+            Usuario usuario = usuarioService.verificarExistenciaUsuario(id);
+
+            
+            usuarioService.deleteUsuario(id);
+
+            return ResponseEntity.ok("Usuário Id: " + usuario.getNome() + " Excluído com Sucesso!");
+        } catch (UsuarioValidation ex) {
+            
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
 
 }

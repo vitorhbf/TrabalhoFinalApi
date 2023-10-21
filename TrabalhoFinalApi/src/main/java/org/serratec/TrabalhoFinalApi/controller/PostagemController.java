@@ -1,16 +1,17 @@
 package org.serratec.TrabalhoFinalApi.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.serratec.TrabalhoFinalApi.dto.PostagemDTO;
+import org.serratec.TrabalhoFinalApi.excepetion.PostagemNotFoundException;
+import org.serratec.TrabalhoFinalApi.excepetion.UsuarioValidation;
 import org.serratec.TrabalhoFinalApi.model.Postagem;
 import org.serratec.TrabalhoFinalApi.model.Usuario;
 import org.serratec.TrabalhoFinalApi.service.PostagemService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/postagens")
 public class PostagemController {
-	private final PostagemService postagemService;
+
+	@Autowired
+	private PostagemService postagemService;
 
 	public PostagemController(PostagemService postagemService) {
 		this.postagemService = postagemService;
@@ -36,28 +39,24 @@ public class PostagemController {
 		return postagemService.getAllPostagens();
 	}
 
-	@GetMapping("{idUsuario}")
-	public ResponseEntity<List<PostagemDTO>> getPostagensByUsuarioId(@Valid @PathVariable Long idUsuario) {
-		List<Postagem> postagens = postagemService.getPostagensByUsuarioId(idUsuario);
-		List<PostagemDTO> postagemDTOs = new ArrayList<>();
+	@GetMapping("/postagem/{id}")
+	public ResponseEntity<PostagemDTO> getPostagemPorId(@PathVariable Long id) {
+		Postagem postagem = postagemService.buscarPostagemPorId(id);
 
-		for (Postagem postagem : postagens) {
-			PostagemDTO postagemDTO = new PostagemDTO();
-			postagemDTO.setId(postagem.getId());
-			postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			String dataFormatada = dateFormat.format(postagem.getDataPostagem());
-			postagemDTO.setDataPostagem(dataFormatada);
-
-			postagemDTO.setAutorNome(postagem.getUsuario().getNome());
-			postagemDTO.setAutorSobrenome(postagem.getUsuario().getSobrenome());
-			postagemDTO.setAutorEmail(postagem.getUsuario().getEmail());
-
-			postagemDTOs.add(postagemDTO);
+		if (postagem != null) {
+			PostagemDTO postagemDTO = postagemService.mapToDTO(postagem);
+			return new ResponseEntity<>(postagemDTO, HttpStatus.OK);
+		} else {
+			throw new PostagemNotFoundException("ID da postagem não é válido: " + postagemService.getPostagemById(id));
 		}
+	}
 
-		return new ResponseEntity<>(postagemDTOs, HttpStatus.OK);
+	@GetMapping("/usuario/{idUsuario}")
+	public ResponseEntity<List<PostagemDTO>> getPostagensByUsuarioId(@PathVariable Long idUsuario)
+			throws UsuarioValidation {
+		List<PostagemDTO> postagens = postagemService.getPostagensByUsuarioId(idUsuario);
+
+		return new ResponseEntity<>(postagens, HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -111,14 +110,18 @@ public class PostagemController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deletarPostagem(@Valid @PathVariable Long id) {
-	    boolean resultado = postagemService.deletePostagem(id);
-	    if (!resultado) {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	    }
+		try {
 
-	    String mensagem = "A postagem com ID " + id + " foi excluída com sucesso.";
-	    return new ResponseEntity<>(mensagem, HttpStatus.OK);
+			Postagem postagem = postagemService.verificarExistenciaPostagem(id);
+
+			postagemService.deletePostagem(id);
+
+			String mensagem = "A postagem com ID " + id + " foi excluída com sucesso.";
+			return ResponseEntity.ok(mensagem);
+		} catch (PostagemNotFoundException ex) {
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+		}
 	}
-
 
 }

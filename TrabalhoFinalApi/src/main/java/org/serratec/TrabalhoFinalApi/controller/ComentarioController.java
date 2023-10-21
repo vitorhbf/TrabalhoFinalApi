@@ -3,18 +3,17 @@ package org.serratec.TrabalhoFinalApi.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.serratec.TrabalhoFinalApi.dto.ComentarioDTO;
 import org.serratec.TrabalhoFinalApi.dto.PostagemDTO;
 import org.serratec.TrabalhoFinalApi.dto.UsuarioDTO;
+import org.serratec.TrabalhoFinalApi.excepetion.ComentarioNotFoundException;
 import org.serratec.TrabalhoFinalApi.excepetion.PostagemNotFoundException;
 import org.serratec.TrabalhoFinalApi.model.Comentario;
 import org.serratec.TrabalhoFinalApi.model.Postagem;
 import org.serratec.TrabalhoFinalApi.model.Usuario;
-import org.serratec.TrabalhoFinalApi.repository.ComentarioRepository;
 import org.serratec.TrabalhoFinalApi.service.ComentarioService;
 import org.serratec.TrabalhoFinalApi.service.PostagemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ComentarioController {
 	private final ComentarioService comentarioService;
 
-	@Autowired
-	private ComentarioRepository comentarioRepository;
+	
 
 	public ComentarioController(ComentarioService comentarioService) {
 		this.comentarioService = comentarioService;
@@ -46,33 +44,37 @@ public class ComentarioController {
 		return comentarioService.getAllComentarios();
 	}
 
-	@GetMapping("{idPostagem}")
-	public ResponseEntity<List<ComentarioDTO>> getComentariosByPostagemId(@PathVariable Long idPostagem) {
-		List<Comentario> comentarios = comentarioService.getComentariosByPostagemId(idPostagem);
-		List<ComentarioDTO> comentarioDTOs = new ArrayList<>();
+	@GetMapping("/{idPostagem}")
+	public ResponseEntity<?> getComentariosByPostagemId(@Valid @PathVariable Long idPostagem) {
+		try {
+			List<Comentario> comentarios = comentarioService.getComentariosByPostagemId2(idPostagem);
+			List<ComentarioDTO> comentarioDTOs = new ArrayList<>();
 
-		for (Comentario comentario : comentarios) {
-			ComentarioDTO comentarioDTO = new ComentarioDTO();
-			comentarioDTO.setId(comentario.getId());
-			comentarioDTO.setConteudoComentario(comentario.getConteudoComentario());
+			for (Comentario comentario : comentarios) {
+				ComentarioDTO comentarioDTO = new ComentarioDTO();
+				comentarioDTO.setId(comentario.getId());
+				comentarioDTO.setConteudoComentario(comentario.getConteudoComentario());
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			String dataFormatada = dateFormat.format(comentario.getDataInicioSeguimento());
-			comentarioDTO.setDataComentario(dataFormatada);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String dataFormatada = dateFormat.format(comentario.getDataInicioSeguimento());
+				comentarioDTO.setDataComentario(dataFormatada);
 
-			Usuario usuario = comentario.getPostagem().getUsuario();
-			UsuarioDTO usuarioDTO = new UsuarioDTO();
-			usuarioDTO.setId(usuario.getId());
-			usuarioDTO.setNome(usuario.getNome());
-			usuarioDTO.setSobrenome(usuario.getSobrenome());
-			usuarioDTO.setEmail(usuario.getEmail());
+				Usuario usuario = comentario.getPostagem().getUsuario();
+				UsuarioDTO usuarioDTO = new UsuarioDTO();
+				usuarioDTO.setId(usuario.getId());
+				usuarioDTO.setNome(usuario.getNome());
+				usuarioDTO.setSobrenome(usuario.getSobrenome());
+				usuarioDTO.setEmail(usuario.getEmail());
 
-			comentarioDTO.setUsuario(usuarioDTO);
+				comentarioDTO.setUsuario(usuarioDTO);
 
-			comentarioDTOs.add(comentarioDTO);
+				comentarioDTOs.add(comentarioDTO);
+			}
+
+			return new ResponseEntity<>(comentarioDTOs, HttpStatus.OK);
+		} catch (PostagemNotFoundException ex) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 		}
-
-		return new ResponseEntity<>(comentarioDTOs, HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -87,15 +89,16 @@ public class ComentarioController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ComentarioDTO> updateComentario(@Valid @PathVariable Long id,
-			@Valid @RequestBody Comentario comentario) {
+	public ResponseEntity<?> updateComentario(@Valid @PathVariable Long id, @Valid @RequestBody Comentario comentario) {
 		Comentario updatedComentario = comentarioService.updateComentario(id, comentario);
 
 		if (updatedComentario != null) {
 			ComentarioDTO comentarioDTO = mapToDTO(updatedComentario);
 			return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+			String errorMessage = "A postagem associada ao comentário não foi encontrada.";
+			return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -128,20 +131,13 @@ public class ComentarioController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deletarPostagem(@Valid @PathVariable Long id) {
-		Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
-		if (comentarioOpt.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-		comentarioRepository.deleteById(id);
-		return ResponseEntity.ok("comentario Id: " + comentarioOpt.get().getId() + " Excluido com Sucesso !");
+	public ResponseEntity<String> deletarComentario(@Valid @PathVariable Long id) {
+	    try {
+	        comentarioService.deleteComentario(id);
+	        return ResponseEntity.ok("Comentário com ID " + id + " excluído com sucesso.");
+	    } catch (ComentarioNotFoundException ex) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	    }
 	}
 
-	/*
-	 * public ResponseEntity<Void> remover(@PathVariable Long id){
-	 * Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
-	 * if(comentarioOpt.isEmpty()) { return ResponseEntity.notFound().build(); }
-	 * comentarioRepository.deleteById(id); return
-	 * ResponseEntity.noContent().build(); }
-	 */
 }

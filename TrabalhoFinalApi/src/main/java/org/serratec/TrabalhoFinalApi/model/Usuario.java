@@ -57,10 +57,12 @@ public class Usuario {
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private List<Postagem> usuarioPostagem = new ArrayList<>();
 
-	/*
-	 * @OneToMany(mappedBy = "usuarioSeguidor") private List<UsuarioRelacionamento>
-	 * UsuarioSeguidores = new ArrayList<>();
-	 */
+	@OneToMany(mappedBy = "id.usuarioSeguidor", cascade = CascadeType.REMOVE)
+	private List<UsuarioRelacionamento> UsuarioSeguidor = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "id.usuarioSeguido", cascade = CascadeType.REMOVE)
+	private List<UsuarioRelacionamento> UsuarioSeguido = new ArrayList<>();
+
 	public Usuario() {
 	}
 

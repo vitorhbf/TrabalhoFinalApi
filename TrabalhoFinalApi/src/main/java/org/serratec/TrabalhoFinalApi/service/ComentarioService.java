@@ -3,6 +3,8 @@ package org.serratec.TrabalhoFinalApi.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.serratec.TrabalhoFinalApi.excepetion.ComentarioNotFoundException;
+import org.serratec.TrabalhoFinalApi.excepetion.PostagemNotFoundException;
 import org.serratec.TrabalhoFinalApi.model.Comentario;
 import org.serratec.TrabalhoFinalApi.repository.ComentarioRepository;
 import org.springframework.http.HttpStatus;
@@ -35,18 +37,38 @@ public class ComentarioService {
 	}
 
 	public Comentario updateComentario(Long id, Comentario comentario) {
-		if (comentarioRepository.existsById(id)) {
-			comentario.setId(id);
-			return comentarioRepository.save(comentario);
+		Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
+		if (comentarioOpt.isPresent()) {
+			Comentario comentarioBd = comentarioOpt.get();
+			comentarioBd.setDataInicioSeguimento(comentario.getDataInicioSeguimento());
+			comentarioBd.setConteudoComentario(comentario.getConteudoComentario());
+			return comentarioRepository.save(comentarioBd);
 		}
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "comentario com ID " + id + " não encontrada");
 	}
 
 	public void deleteComentario(Long id) {
-		comentarioRepository.deleteById(id);
+	    Optional<Comentario> comentarioOpt = comentarioRepository.findById(id);
+
+	    if (comentarioOpt.isEmpty()) {
+	        throw new ComentarioNotFoundException("ID do comentário não é válido: " + id);
+	    }
+
+	    comentarioRepository.deleteById(id);
 	}
 
 	public List<Comentario> getComentariosByPostagemId(Long idPostagem) {
 		return comentarioRepository.findByPostagemId(idPostagem);
 	}
+
+	public List<Comentario> getComentariosByPostagemId2(Long idPostagem) {
+		List<Comentario> comentarios = comentarioRepository.findByPostagemId(idPostagem);
+
+		if (comentarios.isEmpty()) {
+			throw new PostagemNotFoundException("Nenhum comentário encontrado para o ID da postagem: " + idPostagem);
+		}
+
+		return comentarios;
+	}
+
 }

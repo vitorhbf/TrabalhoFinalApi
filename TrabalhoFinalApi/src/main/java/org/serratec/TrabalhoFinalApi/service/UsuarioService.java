@@ -3,6 +3,7 @@ package org.serratec.TrabalhoFinalApi.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.serratec.TrabalhoFinalApi.excepetion.UsuarioValidation;
 import org.serratec.TrabalhoFinalApi.model.Usuario;
 import org.serratec.TrabalhoFinalApi.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,14 @@ public class UsuarioService {
 
     public void deleteUsuario(Long id) {
         usuarioRepository.deleteById(id);
+    }
+    
+    public Usuario verificarExistenciaUsuario(Long id) throws UsuarioValidation {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isEmpty()) {
+            throw new UsuarioValidation("Usuário não encontrado com o ID: " + id);
+        }
+        return usuarioOpt.get();
     }
     
     
