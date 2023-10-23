@@ -16,4 +16,6 @@ public interface UsuarioRelacionamentoRepository extends JpaRepository<UsuarioRe
 	void deleteByIdUsuarioSeguidorIdAndIdUsuarioSeguidoId(Long seguidorId, Long seguidoId);
 
 	List<UsuarioRelacionamento> findByIdUsuarioSeguidoId(Long seguidoId);
+	
+	
 }

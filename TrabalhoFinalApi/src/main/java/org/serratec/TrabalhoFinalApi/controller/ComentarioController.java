@@ -33,6 +33,8 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/comentarios")
 public class ComentarioController {
+	
+	@Autowired
 	private final ComentarioService comentarioService;
 
 	public ComentarioController(ComentarioService comentarioService) {
@@ -87,43 +89,43 @@ public class ComentarioController {
 	}
 
 	@PutMapping("/{id}")
-	@ApiOperation(value = "Atualiza um comentário por ID", notes = "Atualiza um comentário existente com os dados fornecidos")
-	public ResponseEntity<?> updateComentario(@Valid @PathVariable Long id, @Valid @RequestBody Comentario comentario) {
-		Comentario updatedComentario = comentarioService.updateComentario(id, comentario);
+    @ApiOperation(value = "Atualiza um comentário por ID", notes = "Atualiza um comentário existente com os dados fornecidos")
+    public ResponseEntity<?> updateComentario(@Valid @PathVariable Long id, @Valid @RequestBody Comentario comentario) {
+        Comentario updatedComentario = comentarioService.updateComentario(id, comentario);
 
-		if (updatedComentario != null) {
-			ComentarioDTO comentarioDTO = mapToDTO(updatedComentario);
-			return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
-		} else {
-			String errorMessage = "A postagem associada ao comentário não foi encontrada.";
-			return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
-		}
-	}
+        if (updatedComentario != null) {
+            ComentarioDTO comentarioDTO = mapToDTO(updatedComentario);
+            return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
+        } else {
+            String errorMessage = "A postagem associada ao comentário não foi encontrada.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        }
+    }
 
-	private ComentarioDTO mapToDTO(Comentario comentario) {
-		ComentarioDTO comentarioDTO = new ComentarioDTO();
-		comentarioDTO.setId(comentario.getId());
-		comentarioDTO.setConteudoComentario(comentario.getConteudoComentario());
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String dataFormatada = dateFormat.format(comentario.getDataComentario());
-		comentarioDTO.setDataComentario(dataFormatada);
-		Postagem postagem = comentario.getPostagem();
-		PostagemDTO postagemDTO = mapPostagemToDTO(postagem);
-		comentarioDTO.setPostagem(postagemDTO);
+    private ComentarioDTO mapToDTO(Comentario comentario) {
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(comentario.getId());
+        comentarioDTO.setConteudoComentario(comentario.getConteudoComentario());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dataFormatada = dateFormat.format(comentario.getDataComentario());
+        comentarioDTO.setDataComentario(dataFormatada);
+        Postagem postagem = comentario.getPostagem();
+        PostagemDTO postagemDTO = mapPostagemToDTO(postagem);
+        comentarioDTO.setPostagem(postagemDTO);
 
-		return comentarioDTO;
-	}
+        return comentarioDTO;
+    }
 
-	private PostagemDTO mapPostagemToDTO(Postagem postagem) {
-		PostagemDTO postagemDTO = new PostagemDTO();
-		postagemDTO.setId(postagem.getId());
-		postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String dataFormatada = dateFormat.format(postagem.getDataPostagem());
-		postagemDTO.setDataPostagem(dataFormatada);
+    private PostagemDTO mapPostagemToDTO(Postagem postagem) {
+        PostagemDTO postagemDTO = new PostagemDTO();
+        postagemDTO.setId(postagem.getId());
+        postagemDTO.setConteudoPostagem(postagem.getConteudoPostagem());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dataFormatada = dateFormat.format(postagem.getDataPostagem());
+        postagemDTO.setDataPostagem(dataFormatada);
 
-		return postagemDTO;
-	}
+        return postagemDTO;
+    }
 
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Exclui um comentário por ID", notes = "Remove um comentário com base no ID fornecido")

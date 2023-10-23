@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.serratec.TrabalhoFinalApi.dto.UsuarioDTO;
 import org.serratec.TrabalhoFinalApi.excepetion.UsuarioValidation;
 import org.serratec.TrabalhoFinalApi.model.Usuario;
-import org.serratec.TrabalhoFinalApi.repository.UsuarioRepository;
 import org.serratec.TrabalhoFinalApi.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,8 +31,7 @@ public class UsuarioController {
 
 	private final UsuarioService usuarioService;
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -123,7 +121,7 @@ public class UsuarioController {
 
 			usuarioService.deleteUsuario(id);
 
-			return ResponseEntity.ok("Usuário Id: " + usuario.getNome() + " Excluído com Sucesso!");
+			return ResponseEntity.ok("Usuário Id: " + usuario.getId() + " Excluído com Sucesso!");
 		} catch (UsuarioValidation ex) {
 
 			return ResponseEntity.badRequest().body(ex.getMessage());

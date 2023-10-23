@@ -6,14 +6,24 @@ import java.util.Optional;
 import org.serratec.TrabalhoFinalApi.excepetion.ComentarioNotFoundException;
 import org.serratec.TrabalhoFinalApi.excepetion.PostagemNotFoundException;
 import org.serratec.TrabalhoFinalApi.model.Comentario;
+import org.serratec.TrabalhoFinalApi.model.Usuario;
+import org.serratec.TrabalhoFinalApi.model.UsuarioRelacionamento;
 import org.serratec.TrabalhoFinalApi.repository.ComentarioRepository;
+import org.serratec.TrabalhoFinalApi.repository.UsuarioRelacionamentoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ComentarioService {
-	private final ComentarioRepository comentarioRepository;
+	
+	@Autowired
+	private  ComentarioRepository comentarioRepository;
+	
+	@Autowired
+	private UsuarioRelacionamentoRepository usuarioRelacionamentoRepository;
+
 
 	public ComentarioService(ComentarioRepository comentarioRepository) {
 		this.comentarioRepository = comentarioRepository;
@@ -72,4 +82,25 @@ public class ComentarioService {
 
 		return comentarios;
 	}
+	
+	public Comentario createComentario(Comentario comentario, Long usuarioLogadoId) {
+        Usuario postagemUsuario = comentario.getPostagem().getUsuario();
+        if (postagemUsuario != null) {
+            if (postagemUsuario.getId() == usuarioLogadoId) {
+                
+                return comentarioRepository.save(comentario);
+            } else {
+                
+                Optional<UsuarioRelacionamento> relacionamento = usuarioRelacionamentoRepository
+                        .findByIdUsuarioSeguidorIdAndIdUsuarioSeguidoId(usuarioLogadoId, postagemUsuario.getId());
+                if (relacionamento.isPresent()) {
+                    return comentarioRepository.save(comentario);
+                } else {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não segue o usuário que criou esta postagem.");
+                }
+            }
+        } else {
+            throw new PostagemNotFoundException("A postagem associada ao comentário é nula.");
+        }
+    }
 }

@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.serratec.TrabalhoFinalApi.dto.LoginDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +41,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 			return auth;
 		} catch (Exception e) {
-			throw new RuntimeException("Falha ao autenticar usuÃ¡rio", e);
+			throw new RuntimeException("Falha ao autenticar usuário", e);
 		}
 	}
 
